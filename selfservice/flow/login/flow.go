@@ -2,6 +2,7 @@ package login
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/url"
 	"time"
@@ -35,7 +36,8 @@ type Flow struct {
 	// represents the id in the login UI's query parameter: http://<selfservice.flows.login.ui_url>/?flow=<flow_id>
 	//
 	// required: true
-	ID uuid.UUID `json:"id" faker:"-" db:"id"`
+	ID uuid.UUID `json:"id" faker:"-" db:"id" rw:"r"`
+	NID        uuid.UUID  `json:"-"  faker:"-" db:"nid"`
 
 	// Type represents the flow's type which can be either "api" or "browser", depending on the flow interaction.
 	//
@@ -110,6 +112,10 @@ func (f *Flow) GetRequestURL() string {
 
 func (f Flow) TableName(ctx context.Context) string {
 	return corp.ContextualizeTableName(ctx, "selfservice_login_flows")
+}
+
+func (f Flow) WhereID(ctx context.Context, alias string) string {
+	return fmt.Sprintf("%s.%s = ? AND %s.%s = ?", alias, "id", alias, "nid")
 }
 
 func (f *Flow) Valid() error {

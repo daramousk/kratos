@@ -17,8 +17,7 @@ type ErrorContainer struct {
 	//
 	// required: true
 	ID uuid.UUID `db:"id" json:"id"`
-
-	CSRFToken string `db:"csrf_token" json:"-"`
+	NID        uuid.UUID  `json:"-" db:"nid"`
 
 	// Errors in the container
 	//
@@ -33,6 +32,7 @@ type ErrorContainer struct {
 
 	SeenAt  sql.NullTime `json:"-" db:"seen_at"`
 	WasSeen bool         `json:"-" db:"was_seen"`
+	CSRFToken string `db:"csrf_token" json:"-"`
 }
 
 func (e ErrorContainer) TableName(ctx context.Context) string {

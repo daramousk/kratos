@@ -15,6 +15,8 @@ replace github.com/ory/cli => github.com/ory/cli v0.0.45-0.20210312151016-84cf0b
 
 replace go.mongodb.org/mongo-driver => go.mongodb.org/mongo-driver v1.4.6
 
+replace github.com/gobuffalo/pop/v5 => ../../gobuffalo/pop
+
 require (
 	github.com/HdrHistogram/hdrhistogram-go v1.1.0 // indirect
 	github.com/Masterminds/sprig/v3 v3.0.0

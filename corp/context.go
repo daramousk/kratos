@@ -2,6 +2,7 @@ package corp
 
 import (
 	"context"
+	"github.com/gofrs/uuid"
 	"net/http"
 
 	"github.com/ory/kratos/driver/config"
@@ -19,4 +20,8 @@ func ContextualizeMiddleware(_ context.Context) func(rw http.ResponseWriter, r *
 
 func ContextualizeConfig(ctx context.Context, fb *config.Config) *config.Config {
 	return fb
+}
+
+func ContextualizeNID(_ context.Context, fallback uuid.UUID) uuid.UUID {
+	return fallback
 }

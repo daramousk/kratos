@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	continuity "github.com/ory/kratos/continuity/test"
+	login "github.com/ory/kratos/selfservice/flow/login/test"
 	"os"
 	"path/filepath"
 	"sync"
@@ -18,7 +20,6 @@ import (
 
 	"github.com/ory/x/sqlcon"
 
-	"github.com/ory/kratos/continuity"
 	"github.com/ory/kratos/internal/testhelpers"
 	"github.com/ory/kratos/persistence/sql"
 	"github.com/ory/kratos/selfservice/errorx"
@@ -38,7 +39,7 @@ import (
 	"github.com/ory/kratos/courier"
 	"github.com/ory/kratos/identity"
 	"github.com/ory/kratos/internal"
-	"github.com/ory/kratos/selfservice/flow/login"
+	lf "github.com/ory/kratos/selfservice/flow/login"
 	"github.com/ory/kratos/selfservice/flow/registration"
 	"github.com/ory/kratos/selfservice/flow/settings"
 	"github.com/ory/kratos/selfservice/flow/verification"
@@ -153,7 +154,7 @@ func TestPersister(t *testing.T) {
 
 	for name, reg := range conns {
 		t.Run(fmt.Sprintf("database=%s", name), func(t *testing.T) {
-			p := reg.Persister()
+			p := reg.Persister().WithNetworkID(x.NewUUID())
 			conf := reg.Config(context.Background())
 
 			t.Logf("DSN: %s", conf.DSN())
@@ -240,7 +241,7 @@ func TestPersister_Transaction(t *testing.T) {
 	t.Run("case=functions should use the context connection", func(t *testing.T) {
 		c := p.GetConnection(context.Background())
 		errMessage := "some stupid error you can't debug"
-		lr := &login.Flow{
+		lr := &lf.Flow{
 			ID: x.NewUUID(),
 		}
 		err := c.Transaction(func(tx *pop.Connection) error {
